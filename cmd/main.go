@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/asadbek21coder/bookshelf/pkg/handler"
 	"github.com/asadbek21coder/bookshelf/pkg/repository"
 	"github.com/asadbek21coder/bookshelf/pkg/service"
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -17,13 +19,17 @@ func main() {
 		log.Fatalf("error initializing configs: %s", err.Error())
 	}
 
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("error loading env variables: %s", err)
+	}
+
 	db, err := repository.NewPostgresDB(repository.Config{
-		Host:     "localhost",
-		Port:     "5432",
-		Username: "postgres",
-		Password: "asadbek332",
-		DBName:   "bookshelf",
-		SSLMode:  "disable",
+		Host:     viper.GetString("db.host"),
+		Port:     viper.GetString("db.port"),
+		Username: viper.GetString("db.username"),
+		DBName:   viper.GetString("db.dbname"),
+		SSLMode:  viper.GetString("db.sslmode"),
+		Password: os.Getenv("DB_PASSWORD"),
 	})
 
 	if err != nil {
@@ -36,7 +42,7 @@ func main() {
 
 	srv := new(bookshelf.Server)
 
-	if err := srv.Run(viper.GetString("8080"), handlers.InitRoutes()); err != nil {
+	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
 		log.Fatalf("error occured while running http server: %s", err.Error())
 	}
 }
