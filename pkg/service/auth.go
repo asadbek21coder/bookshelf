@@ -20,7 +20,6 @@ func NewAuthService(repo repository.Authorization) *AuthService {
 }
 
 func (s *AuthService) CreateUser(user bookshelf.User) (bookshelf.User, error) {
-	// user.Secret = s.generatePasswordMD5Hash(user.Secret)
 	return s.repo.CreateUser(user)
 }
 
@@ -30,7 +29,7 @@ func (s *AuthService) GetUser(header bookshelf.Header) (bookshelf.User, error) {
 	if err != nil {
 		return bookshelf.User{}, errors.New("error getting user")
 	}
-	hash := s.generatePasswordMD5Hash(payload)
+	hash := s.generateSignMD5Hash(payload)
 	if hash != *header.Sign {
 		return bookshelf.User{}, errors.New("invalid sign")
 	}
