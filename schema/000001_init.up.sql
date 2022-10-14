@@ -1,7 +1,7 @@
 CREATE TABLE "users" (
     "id" serial PRIMARY KEY NOT NULL,
     "name" varchar(200) NOT NULL,
-    "key" varchar(100) NOT NULL,
+    "key" varchar(100) NOT NULL unique,
     "secret" varchar(100) NOT NULL 
 );
 

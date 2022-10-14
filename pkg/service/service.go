@@ -1,8 +1,16 @@
 package service
 
-import "github.com/asadbek21coder/bookshelf/pkg/repository"
+import (
+	"crypto/md5"
+	"encoding/hex"
+
+	"github.com/asadbek21coder/bookshelf"
+	"github.com/asadbek21coder/bookshelf/pkg/repository"
+)
 
 type Authorization interface {
+	CreateUser(user bookshelf.User) (bookshelf.User, error)
+	GetUser(header bookshelf.Header) (bookshelf.User, error)
 }
 
 type Book interface {
@@ -14,5 +22,13 @@ type Service struct {
 }
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		Authorization: NewAuthService(repos.Authorization),
+	}
+}
+
+func (s *AuthService) generateSignMD5Hash(payload string) string {
+
+	hash := md5.Sum([]byte(payload))
+	return hex.EncodeToString(hash[:])
 }
