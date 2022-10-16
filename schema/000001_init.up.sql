@@ -5,12 +5,10 @@ CREATE TABLE "users" (
     "secret" varchar(100) NOT NULL 
 );
 
-CREATE TABLE "books" (
+CREATE TABLE "shelf" (
     "id" serial PRIMARY KEY NOT NULL,
     "isbn" varchar(13) NOT NULL,
-    "title" varchar(200) NOT NULL,
-    "author" varchar(100) NOT NULL, 
-    "published" smallint NOT NULL, 
-    "pages" smallint NOT NULL, 
-    "status" smallint NOT NULL 
+    "status" smallint NOT NULL,
+    "user_key" varchar(100) NOT NULL references "users"("key"), 
+    UNIQUE("isbn", "user_key")
 );

@@ -7,8 +7,6 @@ import (
 	"github.com/asadbek21coder/bookshelf/pkg/repository"
 )
 
-var URL = "http://mydomain.com"
-
 // const key = "MyUserKey"
 
 type AuthService struct {
@@ -25,11 +23,11 @@ func (s *AuthService) CreateUser(user bookshelf.User) (bookshelf.User, error) {
 
 func (s *AuthService) GetUser(header bookshelf.Header) (bookshelf.User, error) {
 	data, err := s.repo.GetUser(header)
-	payload := "GET" + URL + "/myself" + data.Secret
+	payload := "GET" + bookshelf.URL + "/myself" + data.Secret
 	if err != nil {
-		return bookshelf.User{}, errors.New("error getting user")
+		return bookshelf.User{}, err
 	}
-	hash := s.generateSignMD5Hash(payload)
+	hash := generateSignMD5Hash(payload)
 	if hash != *header.Sign {
 		return bookshelf.User{}, errors.New("invalid sign")
 	}

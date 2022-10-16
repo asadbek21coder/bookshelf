@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+var URL = "http://mydomain.com"
+
 type Server struct {
 	httpServer *http.Server
 }

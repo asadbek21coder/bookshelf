@@ -11,6 +11,10 @@ type Authorization interface {
 }
 
 type Book interface {
+	CreateBook(isbn string, header bookshelf.Header) (bookshelf.BookDB, error)
+	// GetBook(header bookshelf.Header) (bookshelf.Book, error)
+	GetUserSecret(header bookshelf.Header) (string, error)
+	GetAllBooks(header bookshelf.Header) ([]bookshelf.FullBook, error)
 }
 
 type Repository struct {
@@ -21,5 +25,6 @@ type Repository struct {
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
+		Book:          NewBookPostgres(db),
 	}
 }

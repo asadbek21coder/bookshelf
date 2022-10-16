@@ -1,2 +1,2 @@
+DROP TABLE "shelf";
 DROP TABLE "users";
-DROP TABLE "books";

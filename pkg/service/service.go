@@ -14,6 +14,9 @@ type Authorization interface {
 }
 
 type Book interface {
+	CreateBook(isbn bookshelf.Isbn, header bookshelf.Header) (bookshelf.BookDB, error)
+	GetUserSecret(header bookshelf.Header) (string, error)
+	GetAllBooks(header bookshelf.Header) ([]bookshelf.FullBook, error)
 }
 
 type Service struct {
@@ -24,10 +27,11 @@ type Service struct {
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
+		Book:          NewBookService(repos.Book),
 	}
 }
 
-func (s *AuthService) generateSignMD5Hash(payload string) string {
+func generateSignMD5Hash(payload string) string {
 
 	hash := md5.Sum([]byte(payload))
 	return hex.EncodeToString(hash[:])
